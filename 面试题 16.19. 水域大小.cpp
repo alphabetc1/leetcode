@@ -3,7 +3,7 @@
 class Solution {
 public:
     vector<int> pondSizes(vector<vector<int>>& land) {
-        int n, m, count;
+        int n, m;
         int fw[8][2] = {{0,1},{0,-1},{1,0},{-1,0},{1,1},{1,-1},{-1,1},{-1,-1}};
         vector<int> ans;
         n = land.size();
@@ -11,25 +11,26 @@ public:
         for(int i = 0; i < n; i++)    {
             for(int j = 0; j < m; j++)    {
                 if(!land[i][j])  {    
-                    count = 1;
+                    queue<pair<int, int>>q;
+                    q.push({i, j});
                     land[i][j] = 1;
-                    queue<int>q;
-                    q.push(i); q.push(j);
+                    int count = 1;
                     while(!q.empty())   {
-                        int topRow = q.front(); q.pop();
-                        int topCol = q.front(); q.pop();
+                        int topRow = q.front().first;
+                        int topCol = q.front().second;
+                        q.pop();
                         for(int i = 0; i < 8; i++)  {
                             int newRow = topRow + fw[i][0];
                             int newCol = topCol + fw[i][1];
                             if(newRow < 0 || newRow >= n || newCol < 0 || newCol >= m)  continue;
                             if(!land[newRow][newCol])   {
-                                count++;
+                                count++;  
+                                q.push({newRow,newCol});
                                 land[newRow][newCol] = 1;
-                                q.push(newRow), q.push(newCol);
                             }
                         }
                     }
-                ans.push_back(count);            
+                    ans.push_back(count);            
                 }
             }
         }
