@@ -19,7 +19,7 @@ public:
                 } else{
                     grid[newCol][newRow] = '0';
                     q.push(newCol); q.push(newRow);
-                }
+                }	
             }
         }
     }
