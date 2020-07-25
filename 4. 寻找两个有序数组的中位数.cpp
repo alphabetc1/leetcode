@@ -36,3 +36,27 @@ public:
         return 0.0;
     }
 };
+
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        int n = nums1.size();
+        int m = nums2.size();
+        int left = 0, right = nums1.size()-1;
+        while(left <= right)    {
+            int midLeft = ((right - left) >> 1) + 1;
+            int midRight = GetMidRight();
+            int leftSum = midLeft + midRight;
+            int rightSum = n - midRight + m - midRight - 2
+            if(leftSum == rightSum)   {
+
+            }else if(leftSum < rightSum)    {
+                left = midLeft + 1;
+            }else if(leftSum > rightSum)    {
+                right = midLeft - 1;
+            }
+        }
+        return 0.0;
+    }
+};
+

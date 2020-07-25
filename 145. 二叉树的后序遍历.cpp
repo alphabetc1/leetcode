@@ -22,7 +22,7 @@ public:
             if(top) {
                 s.push(top);
                 s.push(NULL);
-                if(top->right)  {
+                if(top->right)  { 
                     s.push(top->right);
                 }
                 if(top->left)   {
@@ -36,3 +36,4 @@ public:
         return ans;
     }
 };
+
