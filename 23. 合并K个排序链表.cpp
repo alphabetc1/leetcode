@@ -77,3 +77,49 @@ public:
         return pHead->next;
     }
 };
+
+//基于归并排序
+class Solution {
+public:
+    ListNode *merge(ListNode *p1, ListNode *p2) {
+        ListNode *dummy = new ListNode(-1);
+        ListNode *cur = dummy;
+        while(p1 && p2) {
+            if(p1->val < p2->val)   {
+                cur->next = p1;
+                p1 = p1->next;
+            }else{
+                cur->next = p2;
+                p2 = p2->next;
+            }
+            cur = cur->next;
+        }
+        if(p1)  {
+            cur->next = p1;
+        }
+        if(p2)  {
+            cur->next = p2;
+        }
+        cur = dummy->next;
+        delete dummy;
+        return cur;
+    }
+
+    ListNode *mergeK(vector<ListNode*>& lists, int left, int right) {
+        if(left == right)   {
+            return lists[left];
+        }else if(left > right)  {
+            return nullptr;
+        }
+        int mid = ((right - left) >> 1) + left;
+        return merge(mergeK(lists, left, mid), mergeK(lists, mid+1, right));
+    }
+
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        int n = lists.size();
+        if(!n)  {
+            return nullptr;
+        }
+        return mergeK(lists, 0, n-1);
+    }
+};

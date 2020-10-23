@@ -19,42 +19,36 @@ public:
     }
 };
 
-//左侧边界二分
-class Solution {
-public:
-    int searchInsert(vector<int>& nums, int target) {
-        int l = 0, r = nums.size();
-        while(l < r)    {
-            int mid = l + ((r - l) >> 1);
-            if(nums[mid] >= target) {
-                r = mid;
-            }else{
-                l = mid + 1;
-            }
-        }
-        return l;
-    }
-};
-
-//右侧边界二分
-int right_bound(int[] nums, int target) {
-    if (nums.length == 0) return -1;
-    int left = 0, right = nums.length;
-
-    while (left < right) {
-        int mid = (left + right) / 2;
-        if (nums[mid] == target) {
-            left = mid + 1; // 注意
-        } else if (nums[mid] < target) {
+//二分求左侧边界
+int searchInsert(vector<int>& nums, int target) {
+    int left = 0, right = nums.size();
+    while(left < right) {
+        int mid = ((right - left)>>1) + left;
+        if(nums[mid] < target)  {
             left = mid + 1;
-        } else if (nums[mid] > target) {
+        }else{
             right = mid;
         }
     }
-    return left - 1; // 
+    return right;
 }
 
 
+//二分求右侧边界
+int right_bound(int[] nums, int target) {
+    int left = 0, right = nums.size();
+    while(left < right) {
+        int mid = ((right - left)>>1) + left;
+        if(nums[mid] <= target)  {
+            left = mid + 1;
+        }else{
+            right = mid;
+        }
+    }
+    return left - 1;
+}
+
+//面试题 17.14. 最小K个数.cpp
 //快速排序
 int Partition(vector<int> &nums, int low, int high)	{
 	int pivot = nums[low];
@@ -68,6 +62,7 @@ int Partition(vector<int> &nums, int low, int high)	{
 		}
 		nums[high] = nums[low];
 	}
+    nums[low] = pivot;
 	return low;
 }
 
@@ -81,38 +76,60 @@ void QuickSort(vector<int> &nums, int low, int high)	{
 
 
 //堆排序
-void AdjustUp(vector<int> &nums, int k)	{
-	nums[0] = nums[k];
-	int i = k / 2;
-	while(i > 0 && nums[i] < nums[0])	{
-		A[k] = A[i];
-		k = i;
-		i = k / 2;
-	}
-	nums[k] = nums[0];
-}
 
-void AdjustDown(vector<int> &nums, int k, int len)	{
-	nums[0] = nums[k];
-	for(int i = 2 * k; i <= len; i *= 2)	{
-		if(i < len && nums[i] < nums[i+1])	{
-			i++;
-		}
-		if(nums[0] >= nums[i])	{
-			break;
-		}else	{
-			nums[k] = nums[i];
-			k = i;
-		}
-	}
-	nums[k] = nums[0];
-}
 
-void BuildMaxHeap(std::vector<int> &nums, int len)	{
-	for(int i = len /2 ; i > 0; i--)	{
-		AdjustDown(v, i, len);
-	}
-}
+
+
+//归并排序
+class Solution {
+public:
+    vector<int> b;
+    
+    void merge(vector<int>& a, int left, int mid, int right)    {
+        for(int i = left; i <= right; ++i)   {
+            b[i] = a[i];
+        }
+
+        int lt = left, rt = mid + 1, k = left;
+        while(lt <= mid && rt <= right) {
+            if(b[lt] < b[rt])   {
+                a[k++] = b[lt];
+                ++lt;
+            }else{
+                a[k++] = b[rt];
+                ++rt;
+            }
+        }
+
+        while(lt <= mid)    {
+            a[k++] = b[lt];
+            ++lt;
+        }
+
+        while(rt <= right)   {
+            a[k++] = b[rt];
+            ++rt;
+        }
+    }
+
+    void mergeSort(vector<int>& nums, int left, int right)   {
+        if(left >= right)    {
+            return;
+        }
+        
+        int mid = ((right - left)>>1) + left;
+        mergeSort(nums, left, mid);
+        mergeSort(nums, mid + 1, right);
+        merge(nums, left, mid, right);
+    }
+
+    vector<int> sortArray(vector<int>& nums) {
+        b.resize(nums.size(), 0);
+        mergeSort(nums, 0, nums.size() - 1);
+
+        return nums;
+    }
+};
 
 //反转链表——迭代
 class Solution {
